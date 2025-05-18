@@ -1,61 +1,66 @@
 import streamlit as st
-from pyswip import Prolog
 
-# Initialize Prolog and add birds
-prolog = Prolog()
-
-prolog.assertz("bird('eagle', 'Eagle', 'A large bird of prey, symbol of power and freedom.')")
-prolog.assertz("bird('sparrow', 'Sparrow', 'A small, common bird often found in cities.')")
-prolog.assertz("bird('owl', 'Owl', 'A nocturnal bird known for sharp hearing and vision.')")
-prolog.assertz("bird('peacock', 'Peacock', 'Famous for its bright plumage and large tail.')")
-prolog.assertz("bird('parrot', 'Parrot', 'A colorful and intelligent bird often mimicking human speech.')")
-prolog.assertz("bird('white_stork', 'White Stork', 'A large migratory bird known for its long legs and beak, often seen nesting on rooftops in Europe.')")
-
-bird_images = {
-    'eagle': 'https://upload.wikimedia.org/wikipedia/commons/1/19/Bald_eagle_portrait.jpg',
-    'sparrow': 'https://upload.wikimedia.org/wikipedia/commons/4/45/House_sparrow04.jpg',
-    'owl': 'https://upload.wikimedia.org/wikipedia/commons/1/1f/Siberian_owl.jpg',
-    'peacock': 'https://upload.wikimedia.org/wikipedia/commons/6/6d/Peacock_Plumage.jpg',
-    'parrot': 'https://upload.wikimedia.org/wikipedia/commons/3/32/Ara_macao_Tucson.jpg',
-    'white_stork': 'https://upload.wikimedia.org/wikipedia/commons/3/3a/Ciconia_ciconia_in_flight_2_-_Budakeszi.jpg'
+# Данни за птиците
+birds = {
+    'white_stork': {
+        'name': 'White Stork',
+        'description': 'A large bird known for its long legs and migratory habits.',
+        'image': 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Ciconia_ciconia_-_Portugal_02.jpg'
+    },
+    'bald_eagle': {
+        'name': 'Bald Eagle',
+        'description': 'A bird of prey found in North America, symbol of the United States.',
+        'image': 'https://upload.wikimedia.org/wikipedia/commons/e/e5/Bald_Eagle_Portrait.jpg'
+    },
+    'peacock': {
+        'name': 'Peacock',
+        'description': 'Known for its iridescent tail feathers that fan out in a spectacular display.',
+        'image': 'https://upload.wikimedia.org/wikipedia/commons/2/22/Peacock_Plumage.jpg'
+    },
+    # Добави още птици ако искаш
 }
 
-st.title("🦜 Bird Chatbot with Prolog and Streamlit")
+# Streamlit интерфейс
+st.title("Bird Encyclopedia ChatBot")
 
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
+chat_container = st.container()
+input_container = st.container()
 
-def query_bird(user_text):
-    user_text = user_text.lower()
-    for bird_key in bird_images.keys():
-        if bird_key in user_text:
-            results = list(prolog.query(f"bird('{bird_key}', Name, Description)."))
-            if results:
-                return results[0]['Description'], bird_images[bird_key]
+if 'chat' not in st.session_state:
+    st.session_state.chat = []
+
+def add_message(sender, text, image_url=None):
+    st.session_state.chat.append({'sender': sender, 'text': text, 'image': image_url})
+
+def get_bird_info(message):
+    message = message.lower()
+    for key, info in birds.items():
+        if key in message or info['name'].lower() in message:
+            return info['description'], info['image']
     return None, None
 
-def add_message(sender, message, image_url=None):
-    st.session_state.chat_history.append({'sender': sender, 'message': message, 'image': image_url})
-
-def display_chat():
-    for chat in st.session_state.chat_history:
-        if chat['sender'] == 'User':
-            st.markdown(f"**You:** {chat['message']}")
+# Покажи чат съобщенията
+with chat_container:
+    for msg in st.session_state.chat:
+        if msg['sender'] == 'User':
+            st.markdown(f"**You:** {msg['text']}")
         else:
-            st.markdown(f"**Chatbot:** {chat['message']}")
-            if chat['image']:
-                st.image(chat['image'], width=300)
+            st.markdown(f"**Bot:** {msg['text']}")
+            if msg['image']:
+                st.image(msg['image'], width=300)
 
-with st.form(key='chat_form', clear_on_submit=True):
-    user_input = st.text_input("Enter bird name:")
-    submit_button = st.form_submit_button(label='Send')
+# Въвеждане на ново съобщение
+with input_container:
+    user_input = st.text_input("Enter bird name or question:")
 
-if submit_button and user_input.strip():
-    add_message('User', user_input)
-    description, image_url = query_bird(user_input)
-    if description:
-        add_message('Bot', description, image_url)
-    else:
-        add_message('Bot', "I don't understand the question.")
+    if st.button("Send"):
+        if user_input.strip() != '':
+            add_message('User', user_input)
+            description, image_url = get_bird_info(user_input)
+            if description:
+                add_message('Bot', description, image_url)
+            else:
+                add_message('Bot', "Sorry, I don't understand the question.")
 
-display_chat()
+            # За презареждане на чата
+            st.experimental_rerun()
