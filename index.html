@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bird Encyclopedia ChatBot</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      background-color: #1f2937;
+      color: white;
+    }
+    header img {
+      height: 50px;
+      margin-right: 15px;
+    }
+    #imageContainer {
+      text-align: center;
+      padding: 30px;
+      background: #000;
+    }
+    #imageContainer img {
+      max-width: 90%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .chat-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.25);
+    }
+    .chat-header {
+      background: #333;
+      color: white;
+      padding: 12px 20px;
+      font-size: 18px;
+    }
+    .chat-body {
+      padding: 15px 20px;
+      min-height: 50px;
+    }
+    .chat-footer {
+      display: flex;
+      border-top: 1px solid #ddd;
+    }
+    .chat-footer input {
+      flex: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-bottom-left-radius: 15px;
+    }
+    .chat-footer button {
+      padding: 12px 20px;
+      background: #333;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      border-bottom-right-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="images/logo.png" alt="Logo" />
+    <h1>Bird Encyclopedia</h1>
+  </header>
+
+  <div id="imageContainer"></div>
+
+  <div class="chat-container">
+    <div class="chat-header">Birds ChatBot</div>
+    <div class="chat-body" id="chatBody">🤖 Въведи името на птица (напр. `white_stork`)</div>
+    <div class="chat-footer">
+      <input type="text" id="chatInput" placeholder="Въведи име на птица...">
+      <button onclick="sendMessage()">Изпрати</button>
+    </div>
+  </div>
+
+  <script>
+    const birds = {
+      'white_stork': {
+        name: 'White Stork',
+        description: 'A large bird known for its long legs and migratory habits.',
+        image: 'white_stork.jpg'
+      },
+      'bald_eagle': {
+        name: 'Bald Eagle',
+        description: 'A bird of prey found in North America, symbol of the United States.',
+        image: 'bald_eagle.jpg'
+      },
+      'peacock': {
+        name: 'Peacock',
+        description: 'Known for its iridescent tail feathers that fan out in a spectacular display.',
+        image: 'peacock.jpg'
+      },
+      'peregrine_falcon': {
+        name: 'Peregrine Falcon',
+        description: 'The fastest bird in the world, capable of diving at over 200 mph.',
+        image: 'peregrine_falcon.jpg'
+      }
+      // Добави още ако искаш
+    };
+
+    function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const message = input.value.trim().toLowerCase();
+      const chatBody = document.getElementById("chatBody");
+
+      if (!message) return;
+
+      if (birds[message]) {
+        const bird = birds[message];
+        chatBody.innerHTML = `<strong>${bird.name}:</strong> ${bird.description}`;
+        document.getElementById("imageContainer").innerHTML = `<img src="images/${bird.image}" alt="${bird.name}">`;
+      } else {
+        chatBody.innerHTML = "❌ Не разпознавам тази птица.";
+        document.getElementById("imageContainer").innerHTML = "";
+      }
+
+      input.value = "";
+    }
+  </script>
+</body>
+</html>
