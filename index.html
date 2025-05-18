@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -78,6 +78,7 @@
 <body>
 
   <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Bird_icon_2.svg/64px-Bird_icon_2.svg.png" alt="Logo" />
     <h1>Bird Encyclopedia</h1>
   </header>
 
@@ -85,10 +86,10 @@
 
   <div class="chat-container">
     <div class="chat-header">Birds ChatBot</div>
-    <div class="chat-body" id="chatBody">🤖 Въведи името на птица (напр. `white_stork`)</div>
+    <div class="chat-body" id="chatBody">🦜 Type a bird keyword (e.g. `white_stork`, `bald_eagle`)</div>
     <div class="chat-footer">
-      <input type="text" id="chatInput" placeholder="Въведи име на птица...">
-      <button onclick="sendMessage()">Изпрати</button>
+      <input type="text" id="chatInput" placeholder="Enter bird name...">
+      <button onclick="sendMessage()">Send</button>
     </div>
   </div>
 
@@ -96,25 +97,34 @@
     const birds = {
       'white_stork': {
         name: 'White Stork',
-        description: 'A large bird known for its long legs and migratory habits.',
-        image: 'white_stork.jpg'
+        description: 'A large migratory bird known for its long legs and nest-building on rooftops and chimneys.',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/f/fb/Ciconia_ciconia_20050710_40331.jpg'
       },
       'bald_eagle': {
         name: 'Bald Eagle',
-        description: 'A bird of prey found in North America, symbol of the United States.',
-        image: 'bald_eagle.jpg'
+        description: 'The national bird of the United States, known for its white head and impressive wingspan.',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Haliaeetus_leucocephalus_-Alaska_-USA_-flying-8.jpg/800px-Haliaeetus_leucocephalus_-Alaska_-USA_-flying-8.jpg'
+      },
+      'european_robin': {
+        name: 'European Robin',
+        description: 'A small bird with a distinctive orange-red breast, common across Europe and often associated with Christmas.',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/3/30/Erithacus_rubecula_with_cocked_head.jpg'
       },
       'peacock': {
         name: 'Peacock',
-        description: 'Known for its iridescent tail feathers that fan out in a spectacular display.',
-        image: 'peacock.jpg'
+        description: 'Famous for its extravagant tail feathers used in courtship displays.',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/1/1f/Peacock_Plumage.jpg'
       },
-      'peregrine_falcon': {
-        name: 'Peregrine Falcon',
-        description: 'The fastest bird in the world, capable of diving at over 200 mph.',
-        image: 'peregrine_falcon.jpg'
+      'puffin': {
+        name: 'Atlantic Puffin',
+        description: 'A seabird with a colorful beak and excellent diving abilities, found in the North Atlantic.',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/0/08/Atlantic_puffin_fratercula_arctica.jpg'
+      },
+      'owl': {
+        name: 'Owl',
+        description: 'A nocturnal bird of prey with excellent night vision and a distinctive hooting call.',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/Northern_Saw-whet_Owl.jpg'
       }
-      // Добави още ако искаш
     };
 
     function sendMessage() {
@@ -127,9 +137,9 @@
       if (birds[message]) {
         const bird = birds[message];
         chatBody.innerHTML = `<strong>${bird.name}:</strong> ${bird.description}`;
-        document.getElementById("imageContainer").innerHTML = `<img src="images/${bird.image}" alt="${bird.name}">`;
+        document.getElementById("imageContainer").innerHTML = `<img src="${bird.image}" alt="${bird.name}">`;
       } else {
-        chatBody.innerHTML = "❌ Не разпознавам тази птица.";
+        chatBody.innerHTML = "❌ Bird not recognized. Try another keyword.";
         document.getElementById("imageContainer").innerHTML = "";
       }
 
